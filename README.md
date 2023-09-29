@@ -1,25 +1,20 @@
-# partiel-GO
+4IBC Golang Final Exam - CTF API
 
-                    // Convert the map to JSON
-					jsonBody, err := json.Marshal(data)
-					if err != nil {
-						fmt.Println("Error encoding JSON:", err)
-						return
-					}
 
-					// Envoi de la requête POST vers /iNeedAHint
-					reqHint, err := http.NewRequest("POST", fmt.Sprintf("%s%d/iNeedAHint", baseURL, port), bytes.NewBuffer(jsonBody))
-					if err != nil {
-						fmt.Printf("Erreur lors de la création de la requête POST (iNeedAHint) pour le port %d: %s\n", port, err)
-						return 
-					}
-					reqHint.Header.Set("Content-Type", "application/json")
-					respHint, err := client.Do(reqHint)
-					if err != nil {
-						fmt.Printf("Erreur lors de l'envoi de la requête POST (iNeedAHint) sur le port %d: %s\n", port, err)
-						return 
-					}
-					defer respHint.Body.Close()
-					bodyHint, _ := ioutil.ReadAll(respHint.Body)
-					fmt.Printf("Réponse de la requête POST (iNeedAHint) depuis le port %d: %s\n", port, string(bodyHint))
-				
+Indices
+Tiny Path [ctf-school-????????] = ctf-school-09292023
+Today is a good day innit ?
+Today date
+
+Copy Trash 5FPprcvF-T75f91DQ2C
+url : https://pastebin.com/5FPprcvF
+password : T75f91DQ2C
+
+Dabatase App : 72 44 90 = Protocol
+This is clearly not a binary : 81 49 56 53 50 51 53  =  Q185235
+
+enterChallenge
+Welcome to the challenge !
+Here is your first Challenge:
+77337396dc3250bc4c480e187a69b090
+Don't forget that:Das Einfügen von Code aus dem Internet in Produktionscode ist ...

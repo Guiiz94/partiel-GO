@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 	"sync"
+	"bytes"
 )
 
 const (
@@ -59,6 +60,7 @@ func NewPortScanner() *PortScanner {
 }
 
 func (ps *PortScanner) handlePort(port int) {
+	var secret string
     resp, err := ps.Client.Get(fmt.Sprintf("%s%d/ping", baseURL, port))
     if err != nil {
         return
@@ -111,6 +113,9 @@ func (ps *PortScanner) handlePort(port int) {
             }
         }
     }
+
+	hints := ps.collectUniqueHints(port, secret)
+	fmt.Printf("Hints for port %d: %v\n", port, hints)
 }
 
 
@@ -166,4 +171,57 @@ func (ps *PortScanner) Start() {
     close(ports)
 
     wg.Wait()
+}
+
+func (ps *PortScanner) requestHint(port int, secret string) string {
+    data := map[string]string{
+        "User":   "Matteo",
+        "Secret": secret,
+    }
+    jsonHintData, err := json.Marshal(data)
+    if err != nil {
+        return ""
+    }
+
+    req, err := http.NewRequest("POST", fmt.Sprintf("%s%d/iNeedAHint", baseURL, port), bytes.NewBuffer(jsonHintData))
+    if err != nil {
+        return ""
+    }
+    req.Header.Set("Content-Type", "application/json")
+    
+    resp, err := ps.Client.Do(req)
+    if err != nil {
+        return ""
+    }
+    defer resp.Body.Close()
+
+    body, err := ioutil.ReadAll(resp.Body)
+    if err != nil {
+        return ""
+    }
+
+    return string(body)
+}
+
+
+func (ps *PortScanner) collectUniqueHints(port int, secret string) []string {
+	hintSet := make(map[string]struct{})
+	attempts := 40
+
+	for i := 0; i < attempts; i++ {
+		hint := ps.requestHint(port, secret)
+		if hint != "" {
+			hintSet[hint] = struct{}{}
+		}
+		if len(hintSet) == 5 { 
+			break
+		}
+	}
+
+	hints := make([]string, 0, len(hintSet))
+	for hint := range hintSet {
+		hints = append(hints, hint)
+	}
+
+	return hints
 }
